@@ -2,7 +2,8 @@ package com.example.myproject.web;
 
 
 import com.example.myproject.service.UserService;
-import com.example.myproject.web.dto.UserDto;
+import com.example.myproject.web.dto.request.JoinReqDto;
+import com.example.myproject.web.dto.request.LoginReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@Valid @RequestBody UserDto userDto) {
-        return new ResponseEntity<>(userService.join(userDto), HttpStatus.CREATED);
+    public ResponseEntity<?> join(@Valid @RequestBody JoinReqDto joinReqDto) {
+        return new ResponseEntity<>(userService.join(joinReqDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginReqDto loginReqDto) {
+        return new ResponseEntity<>(userService.login(loginReqDto), HttpStatus.OK);
     }
 }

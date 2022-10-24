@@ -2,7 +2,8 @@ package com.example.myproject.service;
 
 import com.example.myproject.domain.user.User;
 import com.example.myproject.domain.user.UserRepository;
-import com.example.myproject.web.dto.UserDto;
+import com.example.myproject.web.dto.request.JoinReqDto;
+import com.example.myproject.web.dto.request.LoginReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class UserService {
 
     // 회원가입
     @Transactional
-    public User join(UserDto dto) {
+    public User join(JoinReqDto dto) {
 
         String username = dto.getUsername();
         String name = dto.getName();
@@ -48,4 +49,14 @@ public class UserService {
             return true; // 중복 O
         }
     }
+
+//    public User login(LoginReqDto dto) {
+//        String username = dto.getUsername();
+//        String password = dto.getPassword();
+//
+//        User user = userRepository.findByUsernameAndPassword(username, password);
+//
+//
+//
+//    }
 }

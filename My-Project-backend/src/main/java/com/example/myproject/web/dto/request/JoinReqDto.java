@@ -1,4 +1,4 @@
-package com.example.myproject.web.dto;
+package com.example.myproject.web.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class JoinReqDto {
 
     // 유저 아이디
     @NotBlank(message = "아이디를 입력해주세요.")

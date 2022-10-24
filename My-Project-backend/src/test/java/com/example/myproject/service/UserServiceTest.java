@@ -4,8 +4,7 @@ package com.example.myproject.service;
 
 import com.example.myproject.domain.user.User;
 import com.example.myproject.domain.user.UserRepository;
-import com.example.myproject.web.dto.UserDto;
-import org.assertj.core.api.Assertions;
+import com.example.myproject.web.dto.request.JoinReqDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,11 +34,12 @@ public class UserServiceTest {
     @Test
     public void join_Test() {
         // given
-        UserDto dto = new UserDto();
+        JoinReqDto dto = new JoinReqDto();
         dto.setUsername("유저 아이디1");
         dto.setName("유저 이름1");
         dto.setEmail("유저 이메일1");
         dto.setPassword("유저 비밀번호1");
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String password = dto.getPassword();
         String encPassword = bCryptPasswordEncoder.encode(password);
 
@@ -54,32 +54,27 @@ public class UserServiceTest {
         assertThat(user.getUsername()).isEqualTo(userEntity.getUsername());
         assertThat(user.getName()).isEqualTo(userEntity.getName());
         assertThat(user.getEmail()).isEqualTo(userEntity.getEmail());
-        assertThat(user.getPassword()).isEqualTo(userEntity.getPassword());
+        assertThat(bCryptPasswordEncoder.matches(password, encPassword)).isEqualTo(true);
 
     }
 
     @Test
     public void join중복_Test() {
         // given
-        UserDto dto = new UserDto();
+        JoinReqDto dto = new JoinReqDto();
         dto.setUsername("유저 아이디1");
         dto.setName("유저 이름1");
         dto.setEmail("유저 이메일1");
         dto.setPassword("유저 비밀번호1");
-        String password = dto.getPassword();
-        String encPassword = bCryptPasswordEncoder.encode(password);
 
-        UserDto dto2 = new UserDto();
+        userService.join(dto);
+
+        // when
+        JoinReqDto dto2 = new JoinReqDto();
         dto2.setUsername("유저 아이디1");
         dto2.setName("유저 이름1");
         dto2.setEmail("유저 이메일1");
         dto2.setPassword("유저 비밀번호1");
-        String password2 = dto2.getPassword();
-        String encPassword2 = bCryptPasswordEncoder.encode(password2);
-
-
-        // when
-        userService.join(dto);
 
         // then
         assertThrows(RuntimeException.class, () -> userService.join(dto2));
