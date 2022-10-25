@@ -54,7 +54,7 @@ public class UserRepositoryTest {
         User user2 = new User(username2, name2, email2, password2);
 
         // when
-        User userPS = userRepository.save(user);
+        userRepository.save(user);
 
         // then
         assertThrows(RuntimeException.class, () -> userRepository.save(user2));

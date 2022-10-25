@@ -61,23 +61,21 @@ public class UserServiceTest {
     @Test
     public void join중복_Test() {
         // given
+        JoinReqDto user = new JoinReqDto("junit수정123", "메타코딩수정6", "ks12b0000@gmail.com", "sadasdsad");
+        userService.join(user);
+
+        // stub
+        when(userRepository.save(any())).thenReturn(user);
+
+        // when
         JoinReqDto dto = new JoinReqDto();
-        dto.setUsername("유저 아이디1");
+        dto.setUsername("junit수정123");
         dto.setName("유저 이름1");
         dto.setEmail("유저 이메일1");
         dto.setPassword("유저 비밀번호1");
 
-        userService.join(dto);
-
-        // when
-        JoinReqDto dto2 = new JoinReqDto();
-        dto2.setUsername("유저 아이디1");
-        dto2.setName("유저 이름1");
-        dto2.setEmail("유저 이메일1");
-        dto2.setPassword("유저 비밀번호1");
-
         // then
-        assertThrows(RuntimeException.class, () -> userService.join(dto2));
+        assertThrows(RuntimeException.class, () -> userService.join(dto));
 
     }
 }
