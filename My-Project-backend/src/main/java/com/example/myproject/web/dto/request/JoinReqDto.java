@@ -17,11 +17,12 @@ public class JoinReqDto {
 
     // 유저 아이디
     @NotBlank(message = "아이디를 입력해주세요.")
-    @Size(min = 7, message = "아이디는 7자 이상으로 입력해주세요.")
+    @Size(min = 4, message = "아이디는 4자 이상으로 입력해주세요.")
     private String username;
 
     // 유저 이름
     @NotBlank(message = "이름을 입력해주세요.")
+    @Size(min = 2, message = "이름은 2자 이상으로 입력해주세요.")
     private String name;
 
     // 유저 이메일
