@@ -15,34 +15,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/join")
-    public String join() {
-        return "pages/user/join";
-    }
-
+    @CrossOrigin
     @PostMapping("/joinForm")
-    public String joinForm(@Valid JoinReqDto joinReqDto, Errors errors, Model model) {
-        if (errors.hasErrors()) {
-            /* 회원가입 실패시 입력 데이터 값을 유지 */
-            model.addAttribute("joinReqDto", joinReqDto);
-
-            /* 유효성 통과 못한 필드와 메시지를 핸들링 */
-            Map<String, String> validatorResult = userService.validateHandling(errors);
-            for (String key : validatorResult.keySet()) {
-                model.addAttribute(key, validatorResult.get(key));
-            }
-
-            /* 회원가입 페이지로 다시 리턴 */
-            return "pages/user/join";
-        }
-        userService.join(joinReqDto);
-        return "redirect:/";
+    public ResponseEntity<?> joinForm(@Valid @RequestBody JoinReqDto joinReqDto) {
+        return new ResponseEntity<>(userService.join(joinReqDto), HttpStatus.CREATED);
     }
 
 //    @PostMapping("/login")

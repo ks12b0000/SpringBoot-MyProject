@@ -22,7 +22,7 @@ const JoinForm = (props) => {
 
   const submitJoin = (e) => {
     e.preventDefault();
-    fetch('http://localhost:8080/join', {
+    fetch('http://localhost:8080/joinForm', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',

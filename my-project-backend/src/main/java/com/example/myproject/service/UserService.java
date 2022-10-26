@@ -2,6 +2,7 @@ package com.example.myproject.service;
 
 import com.example.myproject.domain.user.User;
 import com.example.myproject.domain.user.UserRepository;
+import com.example.myproject.utils.SHA256;
 import com.example.myproject.web.dto.request.JoinReqDto;
 import com.example.myproject.web.dto.request.LoginReqDto;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class UserService {
         if (checkUsernameDuplicate(username)) {
             throw new RuntimeException("중복된 아이디가 있습니다.");
         }
+        //password = SHA256.encrypt(password);
 
         User user = new User(username, name, email, encPassword);
 
@@ -53,17 +55,6 @@ public class UserService {
         } else {
             return true; // 중복 O
         }
-    }
-
-    /* 회원가입 시, 유효성 체크 */
-    public Map<String, String> validateHandling(Errors errors) {
-        Map<String, String> validatorResult = new HashMap<>();
-
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
-        return validatorResult;
     }
 
 //    public User login(LoginReqDto dto) {
