@@ -65,17 +65,19 @@ public class UserService {
         String username = dto.getUsername();
         String password = dto.getPassword();
 
-        String encPassword = bCryptPasswordEncoder.encode(password);
+        User user = userRepository.findByUsername(username);
 
-        User user = userRepository.findByUsernameAndPassword(username, encPassword);
-        
-        if(user == null){
+        Boolean pw = bCryptPasswordEncoder.matches(password, user.getPassword());
+
+        if(user == null && !pw){
             throw new RuntimeException("아이디 비밀번호를 확인해주세요.");
         }
 
         String accessToken = jwtService.createAccessToken(username);
         String refreshToken = jwtService.createRefreshToken(username);
 
+        System.out.println("accessToken = " + accessToken);
+        System.out.println("refreshToken = " + refreshToken);
         return user;
     }
 }
