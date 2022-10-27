@@ -69,7 +69,7 @@ public class UserService {
 
         Boolean pw = bCryptPasswordEncoder.matches(password, user.getPassword());
 
-        if(user == null && !pw){
+        if(user == null || !pw){
             throw new RuntimeException("아이디 비밀번호를 확인해주세요.");
         }
 
