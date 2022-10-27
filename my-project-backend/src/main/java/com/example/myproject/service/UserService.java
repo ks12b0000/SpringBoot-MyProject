@@ -2,6 +2,7 @@ package com.example.myproject.service;
 
 import com.example.myproject.domain.user.User;
 import com.example.myproject.domain.user.UserRepository;
+import com.example.myproject.utils.JwtService;
 import com.example.myproject.utils.SHA256;
 import com.example.myproject.web.dto.request.JoinReqDto;
 import com.example.myproject.web.dto.request.LoginReqDto;
@@ -24,6 +25,8 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final JwtService jwtService;
+
     // 회원가입
     @Transactional
     public User join(JoinReqDto dto) {
@@ -32,12 +35,13 @@ public class UserService {
         String name = dto.getName();
         String email = dto.getEmail();
         String password = dto.getPassword();
-        String encPassword = bCryptPasswordEncoder.encode(password);
 
         if (checkUsernameDuplicate(username)) {
             throw new RuntimeException("중복된 아이디가 있습니다.");
         }
+
         //password = SHA256.encrypt(password);
+        String encPassword = bCryptPasswordEncoder.encode(password);
 
         User user = new User(username, name, email, encPassword);
 
@@ -57,13 +61,21 @@ public class UserService {
         }
     }
 
-//    public User login(LoginReqDto dto) {
-//        String username = dto.getUsername();
-//        String password = dto.getPassword();
-//
-//        User user = userRepository.findByUsernameAndPassword(username, password);
-//
-//
-//
-//    }
+    public User login(LoginReqDto dto) {
+        String username = dto.getUsername();
+        String password = dto.getPassword();
+
+        String encPassword = bCryptPasswordEncoder.encode(password);
+
+        User user = userRepository.findByUsernameAndPassword(username, encPassword);
+        
+        if(user == null){
+            throw new RuntimeException("아이디 비밀번호를 확인해주세요.");
+        }
+
+        String accessToken = jwtService.createAccessToken(username);
+        String refreshToken = jwtService.createRefreshToken(username);
+
+        return user;
+    }
 }

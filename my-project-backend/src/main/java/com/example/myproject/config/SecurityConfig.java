@@ -27,7 +27,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf().disable();
         http.authorizeRequests()
-                .anyRequest().permitAll();
+                .antMatchers("/user/**").authenticated()
+                .antMatchers("/master/**").access("hasRole('ROLE_MASTER')")
+                .anyRequest().permitAll()
+                .and()
+                .formLogin()
+                .loginPage("/loginForm");
 
         return http.build();
     }

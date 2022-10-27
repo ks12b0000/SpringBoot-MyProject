@@ -35,5 +35,4 @@ public class JoinReqDto {
     @Size(min = 8, message = "비밀번호는 8자 이상으로 입력해주세요.")
     private String password;
 
-
 }
