@@ -36,4 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 
-my-project-backend/src/main/java/com/example/myproject/utils/JwtData.java
+src/main/java/com/example/myproject/utils/JwtData.java
