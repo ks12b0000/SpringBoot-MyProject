@@ -35,4 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
-!**/src/main/**/utils/JwtData.java
+
+java/com/example/myproject/utils/JwtData.java
