@@ -2,6 +2,7 @@ package com.example.myproject.domain;
 
 import com.example.myproject.domain.user.User;
 import com.example.myproject.domain.user.UserRepository;
+import com.example.myproject.web.dto.request.LoginReqDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,27 @@ public class UserRepositoryTest {
         // then
         assertThrows(RuntimeException.class, () -> userRepository.save(user2));
 
+    }
+
+    @Test
+    public void login_Test() {
+        // given
+        String username = "유저 아이디1";
+        String name = "유저 이름1";
+        String email = "유저 이메일1";
+        String password = "유저 비밀번호1";
+        User user = new User(username, name, email, password);
+
+        User userPS = userRepository.save(user);
+
+        String login_username = "유저 아이디1";
+        String login_password = "유저 비밀번호1";
+
+        // when
+        User userEntity = userRepository.findByUsernameAndPassword(login_username, login_password);
+
+        // then
+        assertThat(userPS.getUsername()).isEqualTo(userEntity.getUsername());
+        assertThat(userPS.getPassword()).isEqualTo(userEntity.getPassword());
     }
 }

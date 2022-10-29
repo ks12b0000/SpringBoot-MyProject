@@ -2,6 +2,7 @@ package com.example.myproject.service;
 
 import com.example.myproject.domain.user.User;
 import com.example.myproject.domain.user.UserRepository;
+import com.example.myproject.utils.CookieService;
 import com.example.myproject.utils.JwtService;
 import com.example.myproject.utils.SHA256;
 import com.example.myproject.web.dto.request.JoinReqDto;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +29,8 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final JwtService jwtService;
+
+    private final CookieService cookieService;
 
     // 회원가입
     @Transactional
@@ -63,9 +68,10 @@ public class UserService {
 
     // 로그인
     @Transactional
-    public User login(LoginReqDto dto) {
+    public User login(LoginReqDto dto, HttpServletResponse response) {
         String username = dto.getUsername();
         String password = dto.getPassword();
+        boolean isAutoLogin = dto.getAutoLogin();
 
         User user = userRepository.findByUsername(username);
 
@@ -78,8 +84,13 @@ public class UserService {
         String accessToken = jwtService.createAccessToken(username);
         String refreshToken = jwtService.createRefreshToken(username);
 
-        System.out.println("accessToken = " + accessToken);
-        System.out.println("refreshToken = " + refreshToken);
+        // 쿠키 발급
+        Cookie accessCookie = cookieService.createAccessCookie(accessToken, isAutoLogin);
+        Cookie refreshCookie = cookieService.createRefreshCookie(refreshToken, isAutoLogin);
+
+        response.addCookie(accessCookie);
+        response.addCookie(refreshCookie);
+
         return user;
     }
 }

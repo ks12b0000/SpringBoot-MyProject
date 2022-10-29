@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -18,4 +19,7 @@ public class LoginReqDto {
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
+
+    @NotNull(message = "자동 로그인 여부를 체크해주세요.")
+    private Boolean autoLogin;
 }

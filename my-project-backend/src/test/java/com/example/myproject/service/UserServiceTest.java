@@ -5,6 +5,7 @@ package com.example.myproject.service;
 import com.example.myproject.domain.user.User;
 import com.example.myproject.domain.user.UserRepository;
 import com.example.myproject.web.dto.request.JoinReqDto;
+import com.example.myproject.web.dto.request.LoginReqDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,8 +46,6 @@ public class UserServiceTest {
 
         User user = new User(dto.getUsername(), dto.getName(), dto.getEmail(), encPassword);
 
-        when(userRepository.save(any())).thenReturn(user);
-
         // when
         User userEntity = userService.join(dto);
 
@@ -65,7 +64,6 @@ public class UserServiceTest {
         userService.join(user);
 
         // stub
-        when(userRepository.save(any())).thenReturn(user);
 
         // when
         JoinReqDto dto = new JoinReqDto();
@@ -78,4 +76,33 @@ public class UserServiceTest {
         assertThrows(RuntimeException.class, () -> userService.join(dto));
 
     }
+
+//    @Test
+//    public void login_Test() {
+//        // given
+//        JoinReqDto dto = new JoinReqDto();
+//        dto.setUsername("유저 아이디1");
+//        dto.setName("유저 이름1");
+//        dto.setEmail("유저 이메일1");
+//        dto.setPassword("유저 비밀번호1");
+//        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+//        String password = dto.getPassword();
+//        String encPassword = bCryptPasswordEncoder.encode(password);
+//
+//        User user = new User(dto.getUsername(), dto.getName(), dto.getEmail(), encPassword);
+//
+//        userRepository.save(user);
+//        User user2 = userService.join(dto);
+//
+//        // when
+//        LoginReqDto loginReqDto = new LoginReqDto("유저 아이디1", "유저 비밀번호1", true);
+//        loginReqDto.setUsername("유저 아이디1");
+//        loginReqDto.setPassword();
+//        bCryptPasswordEncoder.encode(loginReqDto.getPassword());
+//        User userEntity = userService.login(loginReqDto, null);
+//
+//        // then
+//        assertThat(user.getUsername()).isEqualTo(userEntity.getUsername());
+//
+//    }
 }
