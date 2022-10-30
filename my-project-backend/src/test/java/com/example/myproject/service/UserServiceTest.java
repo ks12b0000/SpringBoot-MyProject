@@ -16,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+
 
 @Transactional
 @ExtendWith(MockitoExtension.class)
@@ -77,32 +76,32 @@ public class UserServiceTest {
 
     }
 
-//    @Test
-//    public void login_Test() {
-//        // given
-//        JoinReqDto dto = new JoinReqDto();
-//        dto.setUsername("유저 아이디1");
-//        dto.setName("유저 이름1");
-//        dto.setEmail("유저 이메일1");
-//        dto.setPassword("유저 비밀번호1");
-//        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-//        String password = dto.getPassword();
-//        String encPassword = bCryptPasswordEncoder.encode(password);
-//
-//        User user = new User(dto.getUsername(), dto.getName(), dto.getEmail(), encPassword);
-//
-//        userRepository.save(user);
-//        User user2 = userService.join(dto);
-//
-//        // when
-//        LoginReqDto loginReqDto = new LoginReqDto("유저 아이디1", "유저 비밀번호1", true);
-//        loginReqDto.setUsername("유저 아이디1");
-//        loginReqDto.setPassword();
-//        bCryptPasswordEncoder.encode(loginReqDto.getPassword());
-//        User userEntity = userService.login(loginReqDto, null);
-//
-//        // then
-//        assertThat(user.getUsername()).isEqualTo(userEntity.getUsername());
-//
-//    }
+    @Test
+    public void login_Test() {
+        // given
+        JoinReqDto dto = new JoinReqDto();
+        dto.setUsername("유저 아이디1");
+        dto.setName("유저 이름1");
+        dto.setEmail("유저 이메일1");
+        dto.setPassword("유저 비밀번호1");
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String password = dto.getPassword();
+        String encPassword = bCryptPasswordEncoder.encode(password);
+
+        User user = new User(dto.getUsername(), dto.getName(), dto.getEmail(), encPassword);
+
+        userRepository.save(user);
+        User user2 = userService.join(dto);
+
+        // when
+        LoginReqDto loginReqDto = new LoginReqDto("유저 아이디1", "유저 비밀번호1", true);
+        loginReqDto.setUsername("유저 아이디1");
+        loginReqDto.setPassword();
+        bCryptPasswordEncoder.encode(loginReqDto.getPassword());
+        User userEntity = userService.login(loginReqDto, null);
+
+        // then
+        assertThat(user.getUsername()).isEqualTo(userEntity.getUsername());
+
+    }
 }
