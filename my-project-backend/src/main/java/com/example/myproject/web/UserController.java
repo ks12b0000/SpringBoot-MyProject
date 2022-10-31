@@ -30,9 +30,18 @@ public class UserController {
         return new ResponseEntity<>(userService.join(joinReqDto), HttpStatus.CREATED);
     }
 
+    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<LoginResDto> login(@Valid @RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
         User user = userService.login(loginReqDto, response);
         return new ResponseEntity<>(new LoginResDto(user.getId()), HttpStatus.OK);
     }
+
+//    @GetMapping("/logout")
+//    public ResponseEntity<?> logout(HttpServletResponse response){
+//
+//        userService.logout(response);
+//
+//        return new ResponseEntity<>();
+//    }
 }

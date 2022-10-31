@@ -5,32 +5,31 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import { useState } from 'react';
 
-const JoinForm = (props) => {
-  const [join, setJoin] = useState({
+const LoginForm = (props) => {
+  const [login, setLogin] = useState({
     username: '',
-    name: '',
-    email: '',
     password: '',
+    autoLogin: false,
   });
 
   const changeValue = (e) => {
-    setJoin({
-      ...join,
+    setLogin({
+      ...login,
       [e.target.name]: e.target.value,
     });
   };
 
   const submitJoin = (e) => {
     e.preventDefault();
-    fetch('http://localhost:8080/join', {
+    fetch('http://localhost:8080/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      body: JSON.stringify(join),
+      body: JSON.stringify(login),
     })
       .then((res) => {
-        if (res.status === 201) {
+        if (res.status === 200) {
           return res.json();
         } else {
           return null;
@@ -38,17 +37,17 @@ const JoinForm = (props) => {
       })
       .then((res) => {
         if (res !== null) {
-          alert('회원가입이 완료되었습니다.');
-          props.history.push('/loginForm');
+          alert('로그인에 성공했습니다.');
+          props.history.push('/');
         } else {
-          alert('회원가입 실패!');
+          alert('로그인 실패!');
         }
       });
   };
   return (
     <div>
       <Container className="panel">
-        <h1>회원 가입</h1>
+        <h1>로그인</h1>
         <Form onSubmit={submitJoin}>
           <Form.Group
             as={Row}
@@ -87,25 +86,12 @@ const JoinForm = (props) => {
             className="mb-3"
             controlId="formPlaintextPassword"
           >
-            <Col sm>
-              <label>이름</label>
-              <Form.Control
-                type="text"
-                placeholder="이름을 입력해주세요."
+            <Col xs="auto" className="my-1">
+              <Form.Check
+                type="checkbox"
+                id="autoLogin"
                 onChange={changeValue}
-                name="name"
-              />
-            </Col>
-          </Form.Group>
-
-          <Form.Group as={Row} className="mb-3" controlId="formBasicEmail">
-            <Col sm>
-              <label>이메일</label>
-              <Form.Control
-                type="email"
-                placeholder="이메일을 입력해주세요."
-                onChange={changeValue}
-                name="email"
+                label="자동 로그인"
               />
             </Col>
           </Form.Group>
@@ -113,7 +99,7 @@ const JoinForm = (props) => {
 
           <div className="d-grid gap-1">
             <Button variant="secondary" type="submit">
-              Sign Up
+              Login
             </Button>
           </div>
         </Form>
@@ -122,4 +108,4 @@ const JoinForm = (props) => {
   );
 };
 
-export default JoinForm;
+export default LoginForm;

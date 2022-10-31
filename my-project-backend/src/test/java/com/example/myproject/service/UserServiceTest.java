@@ -4,19 +4,28 @@ package com.example.myproject.service;
 
 import com.example.myproject.domain.user.User;
 import com.example.myproject.domain.user.UserRepository;
+import com.example.myproject.utils.CookieService;
+import com.example.myproject.utils.JwtService;
 import com.example.myproject.web.dto.request.JoinReqDto;
 import com.example.myproject.web.dto.request.LoginReqDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @Transactional
 @ExtendWith(MockitoExtension.class)
@@ -28,8 +37,17 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
+    @Spy
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Mock
+    private JwtService jwtService;
+
+    @Mock
+    private CookieService cookieService;
+
+    @Mock
+    HttpServletResponse response;
 
     @Test
     public void join_Test() {
@@ -45,6 +63,7 @@ public class UserServiceTest {
 
         User user = new User(dto.getUsername(), dto.getName(), dto.getEmail(), encPassword);
 
+        when(userRepository.save(any())).thenReturn(user);
         // when
         User userEntity = userService.join(dto);
 
@@ -63,6 +82,7 @@ public class UserServiceTest {
         userService.join(user);
 
         // stub
+        when(userRepository.save(any())).thenReturn(user);
 
         // when
         JoinReqDto dto = new JoinReqDto();
@@ -89,19 +109,18 @@ public class UserServiceTest {
         String encPassword = bCryptPasswordEncoder.encode(password);
 
         User user = new User(dto.getUsername(), dto.getName(), dto.getEmail(), encPassword);
+        when(userRepository.save(any())).thenReturn(user);
 
-        userRepository.save(user);
-        User user2 = userService.join(dto);
+        userService.join(dto);
 
         // when
-        LoginReqDto loginReqDto = new LoginReqDto("유저 아이디1", "유저 비밀번호1", true);
-        loginReqDto.setUsername("유저 아이디1");
-        loginReqDto.setPassword();
-        bCryptPasswordEncoder.encode(loginReqDto.getPassword());
-        User userEntity = userService.login(loginReqDto, null);
+        LoginReqDto loginReqDto = new LoginReqDto("유저 아이디1", "유저 비밀번호1", false);
+        when(userRepository.findByUsername(loginReqDto.getUsername())).thenReturn(user);
+
+        User login = userService.login(loginReqDto ,response);
 
         // then
-        assertThat(user.getUsername()).isEqualTo(userEntity.getUsername());
-
+        assertThat(user.getUsername()).isEqualTo(login.getUsername());
+        assertThat(user.getPassword()).isEqualTo(login.getPassword());
     }
 }

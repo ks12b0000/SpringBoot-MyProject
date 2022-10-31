@@ -3,6 +3,7 @@ package com.example.myproject.web;
 import com.example.myproject.domain.user.User;
 import com.example.myproject.service.UserService;
 import com.example.myproject.web.dto.request.JoinReqDto;
+import com.example.myproject.web.dto.request.LoginReqDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.mapping.Join;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -109,5 +111,28 @@ public class UserControllerTest {
         mvc.perform(post("/join").content(content2))
                 .andExpect(status().is4xxClientError());
 
+    }
+
+    @Test
+    public void login_Test() throws Exception{
+        // given
+        JoinReqDto user = new JoinReqDto("junit수정123", "메타코딩수정6", "ks12b0000@gmail.com", "sadasdsad");
+        User join = userService.join(user);
+
+        LoginReqDto login = new LoginReqDto("junit수정123", "sadasdsad", false);
+        String content = new ObjectMapper().writeValueAsString(login);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+        );
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
     }
 }
