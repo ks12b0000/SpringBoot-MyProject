@@ -32,7 +32,11 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/loginForm");
+                .loginPage("/loginForm")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/");
 
         return http.build();
     }

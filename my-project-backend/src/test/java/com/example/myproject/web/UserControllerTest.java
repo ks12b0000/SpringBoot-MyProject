@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -26,8 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Transactional
 @AutoConfigureMockMvc
@@ -134,5 +134,27 @@ public class UserControllerTest {
         resultActions
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void logout_Test() throws Exception{
+        // given
+        JoinReqDto user = new JoinReqDto("junit수정123", "메타코딩수정6", "ks12b0000@gmail.com", "sadasdsad");
+        userService.join(user);
+
+        LoginReqDto login = new LoginReqDto("junit수정123", "sadasdsad", false);
+        String content = new ObjectMapper().writeValueAsString(login);
+
+        // when
+        ResultActions resultActions2 = mvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+        );
+
+        // then
+        mvc.perform(get("/logout"))
+                .andExpect(redirectedUrl("/"));
     }
 }

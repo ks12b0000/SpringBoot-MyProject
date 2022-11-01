@@ -37,11 +37,12 @@ public class UserController {
         return new ResponseEntity<>(new LoginResDto(user.getId()), HttpStatus.OK);
     }
 
-//    @GetMapping("/logout")
-//    public ResponseEntity<?> logout(HttpServletResponse response){
-//
-//        userService.logout(response);
-//
-//        return new ResponseEntity<>();
-//    }
+    @CrossOrigin
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response){
+
+        userService.logout(response);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
