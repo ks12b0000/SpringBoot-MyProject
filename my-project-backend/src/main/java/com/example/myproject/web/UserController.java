@@ -40,9 +40,7 @@ public class UserController {
     @CrossOrigin
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response){
-
         userService.logout(response);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
